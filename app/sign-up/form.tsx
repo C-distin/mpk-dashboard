@@ -34,7 +34,6 @@ export function SignUpForm() {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        callbackURL: "/dashboard",
       })
 
       if (error) {

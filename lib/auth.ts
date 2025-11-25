@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { admin, bearer } from "better-auth/plugins"
+import { admin } from "better-auth/plugins"
 import { db } from "./db"
 import { account, session, user, verification } from "./db/schema"
 
@@ -34,6 +34,5 @@ export const auth = betterAuth({
     admin({
       defaultBanReason: "Spamming",
     }),
-    bearer(),
   ],
 })
