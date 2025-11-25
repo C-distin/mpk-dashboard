@@ -17,7 +17,11 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next()
 }
 
+{
+  /*
 export const config = {
   runtime: "nodejs", // Required for auth.api calls
   matcher: ["/dashboard"], // Specify the routes the middleware applies to
+}
+*/
 }
