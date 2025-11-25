@@ -42,7 +42,6 @@ export function SignUpForm() {
       }
 
       toast.success("Account created successfully!")
-      router.push("/dashboard")
     } catch (err) {
       toast.error("An unexpected error occurred")
       console.error(err)
