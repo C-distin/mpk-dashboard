@@ -34,7 +34,7 @@ export function SignInForm() {
       })
 
       if (error) {
-        toast.error(error.message || "Failed to sign in")
+        toast.error(error.message)
         return
       }
 
