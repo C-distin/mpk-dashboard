@@ -25,12 +25,27 @@ import {
 } from "@/components/ui/sidebar"
 import { menuItems } from "@/lib/data/menuItems"
 import type { SidebarProps } from "@/lib/types/sidebarProps"
+import { authClient } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 export function AppSideBar({ userRole }: SidebarProps) {
   const { state } = useSidebar()
+  const router = useRouter()
   const _isCollapsed = state === "collapsed"
-
   const currentMenuItems = menuItems[userRole] ?? menuItems.user
+
+  const handleSignOut = async () => {
+    try {
+      await authClient.signOut()
+      toast.success("Signed out successfully")
+      router.push("/sign-in")
+      router.refresh()
+    } catch (error) {
+      console.error("Sign out error:", error)
+      toast.error("Failed to sign out")
+    }
+  }
 
   return (
     <Sidebar collapsible="icon">
@@ -49,7 +64,6 @@ export function AppSideBar({ userRole }: SidebarProps) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-
       {/* Menu Items */}
       <SidebarContent>
         <SidebarGroup>
@@ -69,7 +83,6 @@ export function AppSideBar({ userRole }: SidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
       {/* Footer with User Profile */}
       <SidebarFooter>
         <SidebarMenu>
@@ -119,7 +132,8 @@ export function AppSideBar({ userRole }: SidebarProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="text-destructive focus:text-destructive"
-                  onClick={() => console.log("Logging out...")}
+                  onClick={handleSignOut}
+                  onSelect={(e) => e.preventDefault()}
                 >
                   <LogOut className="mr-2 size-4" />
                   Logout
