@@ -1,4 +1,4 @@
-import { ArrowRight, Package, Truck, Globe } from "lucide-react"
+import { ArrowRight, Globe, Package, Truck } from "lucide-react"
 import Link from "next/link"
 
 export default function LandingPage() {

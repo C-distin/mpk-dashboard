@@ -5,8 +5,8 @@ const nextUrl = process.env.NEXT_PUBLIC_URL as string
 
 export const authClient = createAuthClient({
   /** The base URL of the server (optional if you're using the same domain) */
-  baseURL: nextUrl,
+  baseURL: "http://localhost:3000",
   plugins: [adminClient()],
 })
 
-export const { signIn, signUp, signOut, useSession } = createAuthClient()
+export const { signIn, signUp, signOut, useSession, getSession } = createAuthClient()

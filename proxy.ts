@@ -2,8 +2,8 @@ import { headers } from "next/headers"
 import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 
-export async function proxy(request: NextRequest) {
-  const session = await auth.api.getSession({
+export async function proxy(_request: NextRequest) {
+  const _session = await auth.api.getSession({
     headers: await headers(),
   })
 
@@ -17,11 +17,7 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next()
 }
 
-{
-  /*
 export const config = {
-  runtime: "nodejs", // Required for auth.api calls
+  // runtime: "nodejs", // Required for auth.api calls
   matcher: ["/dashboard"], // Specify the routes the middleware applies to
-}
-*/
 }

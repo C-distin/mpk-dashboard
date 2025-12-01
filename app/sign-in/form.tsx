@@ -9,11 +9,11 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldGroup } from "@/components/ui/field"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { authClient } from "@/lib/auth-client"
 import { type SigninData, signinSchema } from "@/lib/validation/signin"
+import { authClient } from "@/lib/auth-client"
 
 export function SignInForm() {
-  const router = useRouter()
+  const _router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<SigninData>({
@@ -26,24 +26,27 @@ export function SignInForm() {
 
   const onSubmit = async (formData: SigninData) => {
     setIsLoading(true)
+
     try {
-      const { error } = await authClient.signIn.email({
+      const { data, error } = await authClient.signIn.email({
         email: formData.email,
         password: formData.password,
         callbackURL: "/dashboard",
       })
 
       if (error) {
-        toast.error(error.message)
+        toast.error(error.message || "Sign in failed")
+        setIsLoading(false)
         return
       }
 
-      toast.success("Signed in successfully!")
-      router.push("/dashboard")
-    } catch (err) {
+      if (data) {
+        toast.success("Signed in successfully")
+        _router.push("/dashboard")
+      }
+    } catch (error) {
       toast.error("An unexpected error occurred")
-      console.error(err)
-    } finally {
+      console.error(error)
       setIsLoading(false)
     }
   }
