@@ -1,16 +1,15 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, Lock, LockKeyhole, Mail, ShieldUser, User } from "lucide-react"
+import { Loader2, Lock, LockKeyhole, Mail, User } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldGroup } from "@/components/ui/field"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { type SignupData, signupSchema } from "@/lib/validation/signup"
-import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 
 export function SignUpForm() {
@@ -22,7 +21,6 @@ export function SignUpForm() {
     defaultValues: {
       name: "",
       email: "",
-      role: "user",
       password: "",
       confirmPassword: "",
     },
@@ -32,29 +30,18 @@ export function SignUpForm() {
     setIsLoading(true)
 
     try {
-      console.log("Attempting sign up...") // Debug
-
-      const { data, error } = await authClient.signUp.email({
+      await authClient.signUp.email({
         email: formData.email,
         password: formData.password,
         name: formData.name,
       })
 
-      console.log("Sign up response:", { data, error }) // Debug
-
-      if (error) {
-        toast.error(error.message || "Sign up failed")
-        setIsLoading(false)
-        return
-      }
-
-      if (data) {
-        toast.success("Account created successfully! Please sign in.")
-        router.push("/sign-in")
-      }
+      toast.success("Account created successfully!")
+      router.push("/sign-in")
     } catch (error) {
-      console.error("Sign up error:", error) // Debug
-      toast.error("Unable to connect to authentication server. Please try again.")
+      console.error("Sign up error:", error)
+      toast.error(error instanceof Error ? error.message : "Sign up failed")
+    } finally {
       setIsLoading(false)
     }
   }
@@ -107,34 +94,6 @@ export function SignUpForm() {
           />
         </FieldGroup>
         {form.formState.errors.email && <FieldError>{form.formState.errors.email.message}</FieldError>}
-      </Field>
-
-      <Field>
-        <FieldGroup>
-          <Controller
-            name="role"
-            control={form.control}
-            render={({ field }) => (
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
-                  <ShieldUser className="h-4 w-4 text-purple-600" />
-                </div>
-                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
-                  <SelectTrigger className="w-full border-purple-600 focus:ring-purple-600 pl-10">
-                    <SelectValue placeholder="Select a role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="user">User</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          />
-        </FieldGroup>
-        {form.formState.errors.role && <FieldError>{form.formState.errors.role.message}</FieldError>}
       </Field>
 
       <Field>

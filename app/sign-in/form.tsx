@@ -13,7 +13,7 @@ import { type SigninData, signinSchema } from "@/lib/validation/signin"
 import { authClient } from "@/lib/auth-client"
 
 export function SignInForm() {
-  const _router = useRouter()
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<SigninData>({
@@ -28,25 +28,18 @@ export function SignInForm() {
     setIsLoading(true)
 
     try {
-      const { data, error } = await authClient.signIn.email({
+      await authClient.signIn.email({
         email: formData.email,
         password: formData.password,
-        callbackURL: "/dashboard",
       })
 
-      if (error) {
-        toast.error(error.message || "Sign in failed")
-        setIsLoading(false)
-        return
-      }
-
-      if (data) {
-        toast.success("Signed in successfully")
-        _router.push("/dashboard")
-      }
+      toast.success("Signed in successfully")
+      router.push("/dashboard")
+      router.refresh()
     } catch (error) {
-      toast.error("An unexpected error occurred")
-      console.error(error)
+      console.error("Sign in error:", error)
+      toast.error(error instanceof Error ? error.message : "Sign in failed")
+    } finally {
       setIsLoading(false)
     }
   }

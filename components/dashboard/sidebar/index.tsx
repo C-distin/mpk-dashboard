@@ -1,22 +1,6 @@
 "use client"
 
-import {
-  BarChart3,
-  Calculator,
-  ChevronsUpDown,
-  CreditCard,
-  FileText,
-  HelpCircle,
-  LogOut,
-  type LucideIcon,
-  Package,
-  Plane,
-  Settings,
-  Ship,
-  Truck,
-  User,
-  Users,
-} from "lucide-react"
+import { ChevronsUpDown, HelpCircle, LogOut, Settings, Truck, User } from "lucide-react"
 import Link from "next/link"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -39,70 +23,25 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-
-interface MenuProp {
-  icon: LucideIcon
-  label: string
-  href: string
-}
-
-interface MenuProps {
-  [role: string]: MenuProp[]
-}
-
-interface UserProfileProps {
-  name: string
-  email: string
-  initials: string
-  role: string
-}
-
-const menuItems: MenuProps = {
-  admin: [
-    { icon: BarChart3, label: "Dashboard", href: "/dashboard" },
-    { icon: Plane, label: "Air shipment", href: "/air-shipment" },
-    { icon: Ship, label: "Sea shipment", href: "/sea-shipment" },
-    { icon: Package, label: "Batches", href: "/batch" },
-    { icon: CreditCard, label: "Payments", href: "/payment" },
-    { icon: Users, label: "Clients", href: "/clients" },
-    { icon: Calculator, label: "Calculator", href: "/calculator" },
-    { icon: FileText, label: "Reports", href: "/reports" },
-    { icon: Settings, label: "Settings", href: "/settings" },
-  ],
-  user: [
-    { icon: BarChart3, label: "Dashboard", href: "/dashboard" },
-    { icon: Plane, label: "Air shipment", href: "/air-shipment" },
-    { icon: Ship, label: "Sea shipment", href: "/sea-shipment" },
-    { icon: Package, label: "Batches", href: "/batch" },
-    { icon: CreditCard, label: "Payments", href: "/payment" },
-    { icon: Users, label: "Clients", href: "/clients" },
-    { icon: Calculator, label: "Calculator", href: "/calculator" },
-  ],
-}
-
-type UserRole = keyof typeof menuItems
-
-interface SidebarProps {
-  userRole: UserRole
-}
+import { menuItems } from "@/lib/data/menuItems"
+import type { SidebarProps } from "@/lib/types/sidebarProps"
 
 export function AppSideBar({ userRole }: SidebarProps) {
   const { state } = useSidebar()
   const _isCollapsed = state === "collapsed"
-  const currentMenuItems = menuItems[userRole]
+
+  const currentMenuItems = menuItems[userRole] ?? menuItems.user
 
   return (
-    <Sidebar collapsible="icon" className="bg-linear-to-br">
+    <Sidebar collapsible="icon">
       {/* logo */}
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/dashboard">
-                <div className="flex aspect-square size-8  items-center justify-center rounded-lg">
-                  <span>
-                    <Truck />
-                  </span>
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Truck />
                 </div>
                 <span className="text-xl font-semibold">MPK Cargo Logistics</span>
               </Link>
@@ -131,7 +70,7 @@ export function AppSideBar({ userRole }: SidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer with User Profile and Role Switcher */}
+      {/* Footer with User Profile */}
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
