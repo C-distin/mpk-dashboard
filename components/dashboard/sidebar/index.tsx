@@ -32,8 +32,23 @@ import { toast } from "sonner"
 export function AppSideBar({ userRole }: SidebarProps) {
   const { state } = useSidebar()
   const router = useRouter()
+  const { data: session } = authClient.useSession()
   const _isCollapsed = state === "collapsed"
   const currentMenuItems = menuItems[userRole] ?? menuItems.user
+
+  // Get user initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
+
+  const userName = session?.user?.name || "User"
+  const userEmail = session?.user?.email || "user@example.com"
+  const userInitials = getInitials(userName)
 
   const handleSignOut = async () => {
     try {
@@ -94,10 +109,10 @@ export function AppSideBar({ userRole }: SidebarProps) {
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar className="size-8">
-                    <AvatarFallback className="bg-primary text-primary-foreground">JD</AvatarFallback>
+                    <AvatarFallback className="bg-primary text-primary-foreground">{userInitials}</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">John Doe</span>
+                    <span className="truncate font-semibold">{userName}</span>
                     <span className="truncate text-xs text-muted-foreground capitalize">{userRole}</span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
@@ -106,8 +121,8 @@ export function AppSideBar({ userRole }: SidebarProps) {
               <DropdownMenuContent className="w-56" side="top" align="end" sideOffset={4}>
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">John Doe</p>
-                    <p className="text-xs text-muted-foreground">john.doe@example.com</p>
+                    <p className="text-sm font-medium">{userName}</p>
+                    <p className="text-xs text-muted-foreground">{userEmail}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />

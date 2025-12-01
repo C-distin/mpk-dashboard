@@ -32,8 +32,9 @@ export function SignUpForm() {
     try {
       await authClient.signUp.email({
         email: formData.email,
-        password: formData.password,
         name: formData.name,
+        password: formData.password,
+        callbackURL: "/sign-in",
       })
 
       toast.success("Account created successfully!")
