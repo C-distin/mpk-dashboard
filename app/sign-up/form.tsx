@@ -30,18 +30,26 @@ export function SignUpForm() {
     setIsLoading(true)
 
     try {
-      await authClient.signUp.email({
+      console.log("Attempting sign up with:", { email: formData.email, name: formData.name }) // Debug
+
+      const response = await authClient.signUp.email({
         email: formData.email,
         name: formData.name,
         password: formData.password,
-        callbackURL: "/sign-in",
       })
+
+      console.log("Sign up response:", response) // Debug
 
       toast.success("Account created successfully!")
       router.push("/sign-in")
-    } catch (error) {
-      console.error("Sign up error:", error)
-      toast.error(error instanceof Error ? error.message : "Sign up failed")
+      router.refresh()
+    } catch (error: any) {
+      console.error("Sign up error:", error) // Debug
+
+      // Better-Auth errors often have a body or message property
+      const errorMessage = error?.body?.message || error?.message || "Sign up failed. Please try again."
+
+      toast.error(errorMessage)
     } finally {
       setIsLoading(false)
     }
